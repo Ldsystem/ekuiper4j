@@ -1,0 +1,11 @@
+
+services:
+  ekuiper:
+    image: lfedge/ekuiper:${KUIPER_VERSION:-1.11.5}
+    hostname: ekuiper
+    container_name: ekuiper
+    restart: always
+    volumes:
+      - ./etc/mgmt:/opt/ekuiper/etc/mgmt
+    ports:
+      - "9081:9081/tcp"

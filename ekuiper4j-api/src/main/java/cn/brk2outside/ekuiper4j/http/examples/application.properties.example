@@ -1,0 +1,49 @@
+# eKuiper Client Configuration
+
+# Server connection settings
+ekuiper.client.host=localhost
+ekuiper.client.port=9081
+
+# Timeout settings (in milliseconds)
+ekuiper.client.connect-timeout=5000
+ekuiper.client.read-timeout=15000
+
+# Authentication settings - choose one authentication method
+
+# 1. Basic authentication (optional)
+ekuiper.client.auth-enabled=false
+ekuiper.client.username=admin
+ekuiper.client.password=public
+
+# 2. JWT authentication (optional, takes precedence over basic auth if both are enabled)
+ekuiper.client.jwt.enabled=false
+# Token refresh interval in milliseconds (default: 10 minutes)
+ekuiper.client.jwt.refresh-interval-ms=600000
+# Token expiration time in seconds (default: 1 hour)
+ekuiper.client.jwt.expiration-time-seconds=3600
+# Issuer for the JWT token (must match public key filename in eKuiper mgmt directory)
+ekuiper.client.jwt.issuer=ekuiper4j.pub
+# Audience for JWT token (should be "eKuiper")
+ekuiper.client.jwt.audience=eKuiper
+# Path to eKuiper's management directory for public key deployment
+ekuiper.client.jwt.ekuiper-mgmt-path=/etc/mgmt
+# Custom paths for key files (optional, if not specified, will be generated in certs directory)
+# ekuiper.client.jwt.private-key-path=certs/ekuiper4j_rsa.key
+# ekuiper.client.jwt.public-key-path=certs/ekuiper4j.pub
+
+# Example with JWT authentication
+# ekuiper.client.host=ekuiper.example.com
+# ekuiper.client.port=9081
+# ekuiper.client.jwt.enabled=true
+# ekuiper.client.jwt.issuer=my-application.pub
+# ekuiper.client.jwt.audience=eKuiper
+# ekuiper.client.jwt.ekuiper-mgmt-path=/opt/ekuiper/etc/mgmt
+
+# Example with remote server
+# ekuiper.client.host=ekuiper.example.com
+# ekuiper.client.port=9081
+# ekuiper.client.auth-enabled=true
+# ekuiper.client.username=admin
+# ekuiper.client.password=strongpassword
+# ekuiper.client.connect-timeout=10000
+# ekuiper.client.read-timeout=30000 
