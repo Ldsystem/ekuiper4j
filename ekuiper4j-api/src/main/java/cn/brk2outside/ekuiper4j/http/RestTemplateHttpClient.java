@@ -1,6 +1,8 @@
 package cn.brk2outside.ekuiper4j.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -25,6 +27,7 @@ public class RestTemplateHttpClient implements HttpClient {
 
     private final RestTemplate restTemplate;
     private final HttpHeaders defaultHeaders;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     /**
      * -- GETTER --
      *  Gets the base URL of the eKuiper instance.
@@ -191,33 +194,97 @@ public class RestTemplateHttpClient implements HttpClient {
      * @throws HttpClientException if the request fails or returns an invalid status code
      */
     private <T> T executeRequestInternal(String path, HttpMethod method, Object requestBody, 
-                                      ParameterizedTypeReference<T> responseType, Map<String, Object> queryParams,
-                                      Object... pathVariables) throws HttpClientException {
+                                       ParameterizedTypeReference<T> responseType, Map<String, Object> queryParams,
+                                       Object... pathVariables) throws HttpClientException {
         try {
-            // Combine base URL with path
-            String url = combinePath(baseUrl, path);
-            
-            // Build the URL with path variables and query parameters
-            URI uri = buildUri(url, queryParams, pathVariables);
-            
-            // Create the HTTP entity with headers and body
+            // Prepare and execute the request
+            URI uri = buildUri(combinePath(baseUrl, path), queryParams, pathVariables);
             HttpEntity<?> entity = new HttpEntity<>(requestBody, getHeaders());
-            
-            // Execute the request with the appropriate type
             ResponseEntity<T> response = restTemplate.exchange(uri, method, entity, responseType);
+
+            // Handle error responses with bodies that could be eKuiper errors
+            if (response.getStatusCode().isError()) {
+                // First try to parse as an eKuiper error
+                HttpClientException ekuiperException = tryParseEKuiperError(response.getBody(), response.getStatusCode().value());
+                if (ekuiperException != null) {
+                    throw ekuiperException;
+                }
+                
+                // For other error statuses, throw a generic exception with any available message
+                String errorMessage = extractErrorMessage(response.getBody());
+                throw new HttpClientException(
+                        errorMessage != null ? errorMessage : "HTTP request failed with status code: " + response.getStatusCode(),
+                        response.getStatusCode().value());
+            }
             
-            // Return the response body or null
             return response.getBody();
         } catch (HttpStatusCodeException e) {
-            throw new HttpClientException("HTTP request failed with status code: " + e.getStatusCode(), e, e.getStatusCode().value());
+            // Handle Spring's HTTP exceptions that might contain eKuiper errors
+            HttpClientException ekuiperException = tryParseEKuiperError(e.getResponseBodyAsString(), e.getStatusCode().value());
+            if (ekuiperException != null) {
+                throw ekuiperException;
+            }
+            
+            throw new HttpClientException("HTTP request failed with status code: " + e.getStatusCode(), 
+                    e, e.getStatusCode().value());
         } catch (ResourceAccessException e) {
             if (e.getMessage() != null && e.getMessage().contains("Read timed out")) {
                 throw HttpClientException.timeout("Connection to " + baseUrl + " timed out", e);
             }
             throw new HttpClientException("Error accessing resource: " + path, e, -1);
         } catch (Exception e) {
+            // Preserve our custom exceptions
+            if (e instanceof HttpClientException) {
+                throw (HttpClientException) e;
+            }
             throw new HttpClientException("Error executing HTTP request: " + e.getMessage(), e, -1);
         }
+    }
+    
+    /**
+     * Tries to parse an object or response body string as an eKuiper error response.
+     * 
+     * @param body The response body to parse (can be String or deserialized Object)
+     * @param statusCode The HTTP status code
+     * @return An HttpClientException if the body is a valid eKuiper error, null otherwise
+     */
+    private HttpClientException tryParseEKuiperError(Object body, int statusCode) {
+        if (body == null) {
+            return null;
+        }
+        
+        try {
+            // Convert the body to a string if needed
+            String jsonBody;
+            if (body instanceof String) {
+                jsonBody = (String) body;
+            } else {
+                jsonBody = objectMapper.writeValueAsString(body);
+            }
+            
+            // Try to parse as eKuiper error
+            if (jsonBody != null && !jsonBody.isEmpty()) {
+                EKuiperErrorResponse errorResponse = objectMapper.readValue(jsonBody, EKuiperErrorResponse.class);
+                if (errorResponse.getErrorCode() > 0) {
+                    return HttpClientException.ekuiperError(errorResponse, statusCode);
+                }
+            }
+        } catch (Exception ignored) {
+            // Not a valid eKuiper error
+        }
+        
+        return null;
+    }
+
+    /**
+     * Handle eKuiper-specific error responses.
+     *
+     * @param errorResponse The parsed error response
+     * @param statusCode The HTTP status code
+     * @throws HttpClientException with detailed eKuiper error information
+     */
+    private <T> T handleEKuiperError(EKuiperErrorResponse errorResponse, int statusCode) throws HttpClientException {
+        throw HttpClientException.ekuiperError(errorResponse, statusCode);
     }
 
     /**
@@ -288,5 +355,35 @@ public class RestTemplateHttpClient implements HttpClient {
         
         // Let Spring handle the URL expansion with varargs
         return builder.buildAndExpand(pathVariables).toUri();
+    }
+
+    /**
+     * Extracts a meaningful error message from the response body if possible.
+     * 
+     * @param body The response body
+     * @return A meaningful error message if available, null otherwise
+     */
+    private String extractErrorMessage(Object body) {
+        if (body == null) {
+            return null;
+        }
+        
+        try {
+            // If it's a Map, try to extract a message field
+            if (body instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) body;
+                if (map.containsKey("message")) {
+                    return String.valueOf(map.get("message"));
+                }
+                if (map.containsKey("error")) {
+                    return String.valueOf(map.get("error"));
+                }
+            }
+            
+            // Try to convert to string
+            return objectMapper.writeValueAsString(body);
+        } catch (Exception ignored) {
+            return String.valueOf(body);
+        }
     }
 } 
