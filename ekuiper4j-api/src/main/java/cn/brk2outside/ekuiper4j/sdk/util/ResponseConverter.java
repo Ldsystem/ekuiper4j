@@ -97,7 +97,6 @@ public final class ResponseConverter {
      * Converts an object to a target POJO class using Jackson.
      */
     private static <T> T convertToPojo(Object response, Class<T> targetClass) {
-        System.out.println(response);
         try {
             return OBJECT_MAPPER.convertValue(response, targetClass);
         } catch (Exception e) {

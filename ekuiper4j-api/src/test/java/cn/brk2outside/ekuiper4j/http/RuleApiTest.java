@@ -1,6 +1,5 @@
 package cn.brk2outside.ekuiper4j.http;
 
-import cn.brk2outside.ekuiper4j.constants.StreamConstants;
 import cn.brk2outside.ekuiper4j.dto.request.CreateRuleRequest;
 import cn.brk2outside.ekuiper4j.dto.request.CreateStreamRequest;
 import cn.brk2outside.ekuiper4j.dto.response.RuleListResponse;

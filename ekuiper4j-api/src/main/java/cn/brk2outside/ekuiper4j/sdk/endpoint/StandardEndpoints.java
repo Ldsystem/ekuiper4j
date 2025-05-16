@@ -2,7 +2,6 @@ package cn.brk2outside.ekuiper4j.sdk.endpoint;
 
 import cn.brk2outside.ekuiper4j.constants.Endpoints;
 import cn.brk2outside.ekuiper4j.constants.HttpMethods;
-import cn.brk2outside.ekuiper4j.constants.ResponseFormat;
 import cn.brk2outside.ekuiper4j.dto.request.CreateConnectionRequest;
 import cn.brk2outside.ekuiper4j.dto.request.CreateRuleRequest;
 import cn.brk2outside.ekuiper4j.dto.request.CreateStreamRequest;
@@ -13,15 +12,11 @@ import cn.brk2outside.ekuiper4j.dto.response.MqttSourceConfigResponse;
 import cn.brk2outside.ekuiper4j.dto.response.RuleListResponse;
 import cn.brk2outside.ekuiper4j.dto.response.RuleResponse;
 import cn.brk2outside.ekuiper4j.dto.response.RuleStatusResponse;
-import cn.brk2outside.ekuiper4j.dto.response.StreamListResponse;
-import cn.brk2outside.ekuiper4j.dto.response.StreamResponse;
 import cn.brk2outside.ekuiper4j.dto.response.StreamSchemaResponse;
 import cn.brk2outside.ekuiper4j.model.stream.Stream;
 import cn.brk2outside.ekuiper4j.sdk.util.TypeUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,14 +44,14 @@ public enum StandardEndpoints {
     LIST_CONNECTIONS(HttpMethods.GET, Endpoints.Connection.LIST_CONNECTIONS, Void.class, TypeUtil.listOf(Map.class), 0),
     GET_CONNECTION_INFO(HttpMethods.GET, Endpoints.Connection.GET_CONNECTION_STATUS, Void.class, TypeUtil.mapOf(String.class, Object.class), 1),
     DELETE_CONNECTION(HttpMethods.DELETE, Endpoints.Connection.DELETE_CONNECTION, Void.class, TypeUtil.of(String.class), 1),
-    SINK_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SINK_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 0),
+    SINK_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SINK_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 1),
     SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SOURCE_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 0),
     MQTT_SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.MQTT_SOURCE_CONNECTION_CHECK, MqttSourceConfigRequest.class, TypeUtil.of(String.class), 0),
 
     // Config key of mqtt endpoints
     CONF_LIST_MQTT_SOURCES(HttpMethods.GET, Endpoints.ConfigKey.LIST_MQTT_BROKERS, Void.class, TypeUtil.mapOf(String.class, MqttSourceConfigResponse.class), 0),
     CONF_DELETE_MQTT_BROKER(HttpMethods.DELETE, Endpoints.ConfigKey.DELETE_MQTT_BROKER, Void.class, TypeUtil.of(String.class), 1),
-    CONF_CREATE_MQTT_BROKER(HttpMethods.PUT, Endpoints.ConfigKey.PUT_MQTT_BROKER, MqttSourceConfigRequest.class, TypeUtil.of(MqttSourceConfigResponse.class), 1),
+    CONF_CREATE_MQTT_BROKER(HttpMethods.PUT, Endpoints.ConfigKey.PUT_MQTT_BROKER, Map.class, TypeUtil.of(MqttSourceConfigResponse.class), 1),
 
     // Rule endpoints
     CREATE_RULE(HttpMethods.POST, Endpoints.Rules.CREATE_RULE, CreateRuleRequest.class, TypeUtil.of(String.class), 0),

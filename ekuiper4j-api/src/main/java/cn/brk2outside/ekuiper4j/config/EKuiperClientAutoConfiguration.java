@@ -4,6 +4,11 @@ import cn.brk2outside.ekuiper4j.http.HttpClient;
 import cn.brk2outside.ekuiper4j.http.RestTemplateHttpClient;
 import cn.brk2outside.ekuiper4j.http.auth.JwtAwareHttpClient;
 import cn.brk2outside.ekuiper4j.http.auth.JwtTokenManager;
+import cn.brk2outside.ekuiper4j.sdk.api.ConfigKeyAPI;
+import cn.brk2outside.ekuiper4j.sdk.api.ConnectionAPI;
+import cn.brk2outside.ekuiper4j.sdk.api.OverviewAPI;
+import cn.brk2outside.ekuiper4j.sdk.api.RuleAPI;
+import cn.brk2outside.ekuiper4j.sdk.api.StreamAPI;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -95,5 +100,65 @@ public class EKuiperClientAutoConfiguration {
                     baseHeaders
             );
         }
+    }
+    
+    /**
+     * Creates the OverviewAPI bean if not already defined.
+     *
+     * @param httpClient The eKuiper HTTP client
+     * @return A configured OverviewAPI instance
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public OverviewAPI overviewAPI(HttpClient httpClient) {
+        return new OverviewAPI(httpClient);
+    }
+    
+    /**
+     * Creates the StreamAPI bean if not already defined.
+     *
+     * @param httpClient The eKuiper HTTP client
+     * @return A configured StreamAPI instance
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public StreamAPI streamAPI(HttpClient httpClient) {
+        return new StreamAPI(httpClient);
+    }
+    
+    /**
+     * Creates the ConnectionAPI bean if not already defined.
+     *
+     * @param httpClient The eKuiper HTTP client
+     * @return A configured ConnectionAPI instance
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public ConnectionAPI connectionAPI(HttpClient httpClient) {
+        return new ConnectionAPI(httpClient);
+    }
+    
+    /**
+     * Creates the ConfigKeyAPI bean if not already defined.
+     *
+     * @param httpClient The eKuiper HTTP client
+     * @return A configured ConfigKeyAPI instance
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public ConfigKeyAPI configKeyAPI(HttpClient httpClient) {
+        return new ConfigKeyAPI(httpClient);
+    }
+    
+    /**
+     * Creates the RuleAPI bean if not already defined.
+     *
+     * @param httpClient The eKuiper HTTP client
+     * @return A configured RuleAPI instance
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public RuleAPI ruleAPI(HttpClient httpClient) {
+        return new RuleAPI(httpClient);
     }
 } 
