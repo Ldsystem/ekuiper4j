@@ -10,13 +10,13 @@
     </parent>
     <groupId>cn.brk2outside.ekuiper4j</groupId>
     <artifactId>ekuiper4j</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ekuiper4j</name>
     <description>ekuiper4j</description>
     <properties>
         <java.version>17</java.version>
-        <revision>0.1.1</revision>
+        <revision>0.1.2</revision>
         <ekuiper4j.version>${revision}</ekuiper4j.version>
     </properties>
     
