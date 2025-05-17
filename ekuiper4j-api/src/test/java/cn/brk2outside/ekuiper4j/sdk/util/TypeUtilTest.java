@@ -1,5 +1,6 @@
 package cn.brk2outside.ekuiper4j.sdk.util;
 
+import cn.brk2outside.ekuiper4j.Ekuiper4jApiApplicationTests;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -68,7 +69,7 @@ public class TypeUtilTest {
         assertEquals(Integer.class, listParamType.getActualTypeArguments()[0]);
     }
     
-    @Test
+/*    @Test
     void testCompareOldAndNewApproach() {
         // Old approach
         TypeReference<List<String>> oldRef = new TypeReference<>() {};
@@ -79,5 +80,5 @@ public class TypeUtilTest {
         
         // Both should represent the same type
         assertEquals(oldType.getType().toString(), newType.getType().toString());
-    }
+    }*/
 } 

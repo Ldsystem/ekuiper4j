@@ -48,6 +48,7 @@ public class StreamField {
          * Data type of the field
          */
         @JsonSerialize(using = EnumSerializer.EnumNameDirectSerializer.class)
+        @JsonDeserialize(using = EnumSerializer.EnumNameDirectDeserializer.class)
         private StreamConstants.DataType type;
         
         /**

@@ -25,13 +25,13 @@ public interface Endpoints {
 
     interface Connection {
         String CREATE_CONNECTION = "/connections";
-        String UPDATE_CONNECTION = "/connection/{id}";
+        String UPDATE_CONNECTION = "/connections/{id}";
         String LIST_CONNECTIONS = "/connections";
         String GET_CONNECTION_STATUS = "/connections/{id}";
         String DELETE_CONNECTION = GET_CONNECTION_STATUS;
         String SINK_CONNECTION_CHECK = "/metadata/sinks/connection/{type}";
-        String SOURCE_CONNECTION_CHECK = "/metadata/source/connection/{type}";
-        String MQTT_SOURCE_CONNECTION_CHECK = "/metadata/source/connection/mqtt";
+        String SOURCE_CONNECTION_CHECK = "/metadata/sources/connection/{type}";
+        String MQTT_SOURCE_CONNECTION_CHECK = "/metadata/sources/connection/mqtt";
     }
 
     interface Rules {

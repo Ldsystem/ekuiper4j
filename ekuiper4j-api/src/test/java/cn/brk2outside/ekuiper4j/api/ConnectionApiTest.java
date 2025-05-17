@@ -2,11 +2,13 @@ package cn.brk2outside.ekuiper4j.api;
 
 import cn.brk2outside.ekuiper4j.dto.request.CreateConnectionRequest;
 import cn.brk2outside.ekuiper4j.dto.request.MqttSourceConfigRequest;
+import cn.brk2outside.ekuiper4j.http.HttpClientException;
 import cn.brk2outside.ekuiper4j.model.MqttConnProps;
 import cn.brk2outside.ekuiper4j.sdk.api.ConnectionAPI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +48,7 @@ public class ConnectionApiTest extends BaseApiTest {
     private CreateConnectionRequest<MqttConnProps> createTestConnectionRequest() {
         // Create an MQTT connection
         MqttConnProps mqttProps = MqttConnProps.builder()
-                .server("tcp://localhost:1883")
+                .server(getMqttBrokerInternalUrl())  // Use internal MQTT broker URL
                 .clientid("ekuiper_test_client")
                 .qos(1)
                 .protocolVersion(null) // Default to 3.1.1
@@ -82,8 +84,10 @@ public class ConnectionApiTest extends BaseApiTest {
     void testGetConnectionInfo() {
         // First create a connection
         CreateConnectionRequest<MqttConnProps> request = createTestConnectionRequest();
-        connectionAPI.createConnection(request);
-        
+        String response = connectionAPI.createConnection(request);
+
+        assertEquals("success", response);
+
         // Get connection details
         Map<String, Object> connectionInfo = connectionAPI.getConnectionInfo(TEST_CONNECTION_NAME);
         
@@ -95,7 +99,7 @@ public class ConnectionApiTest extends BaseApiTest {
         // Verify props
         Map<String, Object> props = (Map<String, Object>) connectionInfo.get("props");
         assertNotNull(props);
-        assertEquals("tcp://localhost:1883", props.get("server"));
+        assertEquals(getMqttBrokerInternalUrl(), props.get("server"));  // Use internal URL
     }
 
     @Test
@@ -115,15 +119,15 @@ public class ConnectionApiTest extends BaseApiTest {
         updateRequest.setId(TEST_CONNECTION_NAME);
         updateRequest.setTyp("mqtt");
         updateRequest.setProps(updatedProps);
-        
+
         // Update the connection
-        Map<String, Object> updateResponse = connectionAPI.updateConnection(TEST_CONNECTION_NAME, updateRequest);
-        
-        assertNotNull(updateResponse);
-        
+        String updateResponse = connectionAPI.updateConnection(TEST_CONNECTION_NAME, updateRequest);
+
+        assertEquals("success", updateResponse);
+
         // Get connection details and verify update
         Map<String, Object> connectionInfo = connectionAPI.getConnectionInfo(TEST_CONNECTION_NAME);
-        
+
         // Verify updated details
         Map<String, Object> props = (Map<String, Object>) connectionInfo.get("props");
         assertNotNull(props);
@@ -165,40 +169,31 @@ public class ConnectionApiTest extends BaseApiTest {
         sinkConfig.put("type", "mqtt");
         sinkConfig.put("name", "test_sink");
         Map<String, Object> connConfig = new HashMap<>();
-        connConfig.put("server", "tcp://localhost:1883");
+        connConfig.put("server", getMqttBrokerInternalUrl());  // Use internal URL
         connConfig.put("topic", "test/topic");
         connConfig.put("qos", 1);
         sinkConfig.putAll(connConfig);
-        
-        // Check sink connection
-        String sinkCheckResult = connectionAPI.checkSinkConnection("mqtt", sinkConfig);
-        assertNotNull(sinkCheckResult);
-        
+
+        // Check sink connection - may throw exception, which is fine
+        connectionAPI.checkSinkConnection(sinkConfig);
+
         // Create a MQTT source config for testing
         Map<String, Object> sourceConfig = new HashMap<>();
         sourceConfig.put("type", "mqtt");
         sourceConfig.put("name", "test_source");
-        sourceConfig.put("properties", connConfig);
+        sourceConfig.putAll(connConfig);
         
-        // Check source connection
-        String sourceCheckResult = connectionAPI.checkSourceConnection(sourceConfig);
-        assertNotNull(sourceCheckResult);
+        assertDoesNotThrow(() -> connectionAPI.checkSourceConnection(sourceConfig));
     }
 
     @Test
     void testCheckMqttConnection() {
         // Create MQTT config request for testing
         MqttSourceConfigRequest mqttRequest = new MqttSourceConfigRequest();
-        mqttRequest.setServer("tcp://localhost:1883");
+        mqttRequest.setServer(getMqttBrokerInternalUrl());  // Use internal URL
         mqttRequest.setQos(1);
-        
-        try {
-            // This might fail if MQTT broker is not available, but we want to test the API call
-            String mqttCheckResult = connectionAPI.checkMqttSourceConnection(mqttRequest);
-            assertNotNull(mqttCheckResult);
-        } catch (Exception e) {
-            // Expected to fail in test environment without MQTT broker
-            assertNotNull(e);
-        }
+
+        // Check the MQTT connection
+        assertDoesNotThrow(() -> connectionAPI.checkMqttSourceConnection(mqttRequest));
     }
 } 

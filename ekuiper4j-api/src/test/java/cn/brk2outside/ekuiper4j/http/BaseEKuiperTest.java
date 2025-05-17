@@ -1,9 +1,11 @@
 package cn.brk2outside.ekuiper4j.http;
 
+import cn.brk2outside.ekuiper4j.Ekuiper4jApiApplicationTests;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -17,25 +19,43 @@ public abstract class BaseEKuiperTest {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseEKuiperTest.class);
     
+    // Create a shared Docker network for the containers
+    private static final Network NETWORK = Network.newNetwork();
+    
+    // Start MQTT broker container first
+    @Container
+    protected static final MqttBrokerContainer MQTT_BROKER = new MqttBrokerContainer()
+            .withNetwork(NETWORK)
+            .withNetworkAliases("mqtt-broker")
+            .withLogConsumer(new Slf4jLogConsumer(LOGGER).withPrefix("mqtt"));
+    
+    // Then start eKuiper container
     @Container
     protected static final EKuiperContainer EKUIPER = new EKuiperContainer()
+            .withNetwork(NETWORK)
             .withLogConsumer(new Slf4jLogConsumer(LOGGER).withPrefix("ekuiper"));
     
     /**
-     * Set up the eKuiper container once before all tests.
+     * Set up the containers once before all tests.
      */
     @BeforeAll
     public static void setUpAll() {
+        // Start MQTT broker first
+        if (!MQTT_BROKER.isRunning()) {
+            MQTT_BROKER.start();
+        }
+        LOGGER.info("MQTT broker container started at {}:{}", MQTT_BROKER.getMqttHost(), MQTT_BROKER.getMqttPort());
+        
+        // Then start eKuiper
         if (!EKUIPER.isRunning()) {
             EKUIPER.start();
         }
-        
         LOGGER.info("eKuiper container started at {}:{}", EKUIPER.getEkuiperHost(), EKUIPER.getEkuiperPort());
         LOGGER.info("Using management directory: {}", EKUIPER.getMgmtDirectory());
     }
     
     /**
-     * Tear down the eKuiper container after all tests.
+     * Tear down the containers after all tests.
      */
     @AfterAll
     public static void tearDownAll() {
@@ -43,5 +63,29 @@ public abstract class BaseEKuiperTest {
             EKUIPER.stop();
             LOGGER.info("eKuiper container stopped");
         }
+        
+        if (MQTT_BROKER.isRunning()) {
+            MQTT_BROKER.stop();
+            LOGGER.info("MQTT broker container stopped");
+        }
+    }
+    
+    /**
+     * Get the MQTT broker URL for external connections (outside containers).
+     * 
+     * @return MQTT broker URL
+     */
+    public static String getMqttBrokerUrl() {
+        return MQTT_BROKER.getMqttUrl();
+    }
+    
+    /**
+     * Get the MQTT broker URL for internal connections (from eKuiper container).
+     * This uses the network alias that's accessible inside the Docker network.
+     * 
+     * @return MQTT broker URL for internal connections
+     */
+    public static String getMqttBrokerInternalUrl() {
+        return "tcp://mqtt-broker:1883";
     }
 } 

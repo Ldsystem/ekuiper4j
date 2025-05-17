@@ -40,18 +40,19 @@ public enum StandardEndpoints {
 
     // Connection endpoints
     CREATE_CONNECTION(HttpMethods.POST, Endpoints.Connection.CREATE_CONNECTION, CreateConnectionRequest.class, TypeUtil.of(String.class), 0),
-    UPDATE_CONNECTION(HttpMethods.PUT, Endpoints.Connection.UPDATE_CONNECTION, CreateConnectionRequest.class, TypeUtil.mapOf(String.class, Object.class), 1),
+    UPDATE_CONNECTION(HttpMethods.PUT, Endpoints.Connection.UPDATE_CONNECTION, CreateConnectionRequest.class, TypeUtil.of(String.class), 1),
     LIST_CONNECTIONS(HttpMethods.GET, Endpoints.Connection.LIST_CONNECTIONS, Void.class, TypeUtil.listOf(Map.class), 0),
     GET_CONNECTION_INFO(HttpMethods.GET, Endpoints.Connection.GET_CONNECTION_STATUS, Void.class, TypeUtil.mapOf(String.class, Object.class), 1),
     DELETE_CONNECTION(HttpMethods.DELETE, Endpoints.Connection.DELETE_CONNECTION, Void.class, TypeUtil.of(String.class), 1),
     SINK_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SINK_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 1),
-    SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SOURCE_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 0),
-    MQTT_SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.MQTT_SOURCE_CONNECTION_CHECK, MqttSourceConfigRequest.class, TypeUtil.of(String.class), 0),
+    SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.SOURCE_CONNECTION_CHECK, Map.class, TypeUtil.of(String.class), 1),
+    MQTT_SOURCE_CONNECTION_CHECK(HttpMethods.POST, Endpoints.Connection.MQTT_SOURCE_CONNECTION_CHECK, MqttSourceConfigRequest.class, TypeUtil.of(Void.class), 0),
 
     // Config key of mqtt endpoints
     CONF_LIST_MQTT_SOURCES(HttpMethods.GET, Endpoints.ConfigKey.LIST_MQTT_BROKERS, Void.class, TypeUtil.mapOf(String.class, MqttSourceConfigResponse.class), 0),
-    CONF_DELETE_MQTT_BROKER(HttpMethods.DELETE, Endpoints.ConfigKey.DELETE_MQTT_BROKER, Void.class, TypeUtil.of(String.class), 1),
-    CONF_CREATE_MQTT_BROKER(HttpMethods.PUT, Endpoints.ConfigKey.PUT_MQTT_BROKER, Map.class, TypeUtil.of(MqttSourceConfigResponse.class), 1),
+    CONF_DELETE_MQTT_BROKER(HttpMethods.DELETE, Endpoints.ConfigKey.DELETE_MQTT_BROKER, Void.class, TypeUtil.of(Void.class), 1),
+    // returns nothing
+    CONF_CREATE_MQTT_BROKER(HttpMethods.PUT, Endpoints.ConfigKey.PUT_MQTT_BROKER, Map.class, TypeUtil.of(Void.class), 1),
 
     // Rule endpoints
     CREATE_RULE(HttpMethods.POST, Endpoints.Rules.CREATE_RULE, CreateRuleRequest.class, TypeUtil.of(String.class), 0),

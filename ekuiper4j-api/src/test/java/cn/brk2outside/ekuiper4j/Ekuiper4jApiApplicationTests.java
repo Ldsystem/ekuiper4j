@@ -1,10 +1,10 @@
-package cn.brk2outside.ekuiper4j.api;
+package cn.brk2outside.ekuiper4j;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Ekuiper4jApiApplicationTests {
+public class Ekuiper4jApiApplicationTests {
 
     @Test
     void contextLoads() {

@@ -36,3 +36,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Maven Generated Files ###
+.flattened-pom.xml
+
+### Test Generated Files ###
+ekuiper4j-api/certs/

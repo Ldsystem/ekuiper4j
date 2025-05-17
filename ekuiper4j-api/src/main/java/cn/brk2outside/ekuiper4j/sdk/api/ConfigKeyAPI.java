@@ -32,8 +32,8 @@ public class ConfigKeyAPI {
      * @param brokerName the name of the broker to delete
      * @return success message
      */
-    public String deleteMqttBroker(String brokerName) {
-        return ApiRequestExecutor.execute(client, StandardEndpoints.CONF_DELETE_MQTT_BROKER.getEndpoint(), brokerName);
+    public void deleteMqttBroker(String brokerName) {
+        ApiRequestExecutor.execute(client, StandardEndpoints.CONF_DELETE_MQTT_BROKER.getEndpoint(), brokerName);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ConfigKeyAPI {
      * @param request the MQTT broker configuration
      * @return the created/updated MQTT broker configuration
      */
-    public MqttSourceConfigResponse createOrUpdateMqttBroker(String brokerName, MqttSourceConfigRequest request) {
-        return ApiRequestExecutor.executeBody(client, StandardEndpoints.CONF_CREATE_MQTT_BROKER.getEndpoint(), Map.of(brokerName, request), brokerName);
+    public void createOrUpdateMqttBroker(String brokerName, MqttSourceConfigRequest request) {
+        ApiRequestExecutor.executeBody(client, StandardEndpoints.CONF_CREATE_MQTT_BROKER.getEndpoint(), request, brokerName);
     }
 } 

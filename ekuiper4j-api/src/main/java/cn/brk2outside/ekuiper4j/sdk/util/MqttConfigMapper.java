@@ -71,7 +71,6 @@ public final class MqttConfigMapper {
                 .connectionSelector(connProps.getConnectionSelector())
                 .server(connProps.getServer())
                 .username(connProps.getUsername())
-                .password(connProps.getPassword() != null ? "********" : null) // Mask password in response
                 .protocolVersion(connProps.getProtocolVersion() != null ? connProps.getProtocolVersion().getVersion() : null)
                 .clientid(connProps.getClientid())
                 .qos(connProps.getQos())

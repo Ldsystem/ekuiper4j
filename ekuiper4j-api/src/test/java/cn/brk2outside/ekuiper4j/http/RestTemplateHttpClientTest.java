@@ -92,7 +92,7 @@ class RestTemplateHttpClientTest extends BaseEKuiperTest {
             
             // Add MQTT connection properties
             MqttConnProps config = MqttConnProps.builder()
-                    .server("tcp://localhost:1883")
+                    .server(getMqttBrokerInternalUrl())  // Use internal MQTT broker URL
                     .username("admin")
                     .password("public")
                     .build();

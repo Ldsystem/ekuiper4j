@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -45,10 +46,14 @@ public class EKuiperContainer extends GenericContainer<EKuiperContainer> {
         }
         
         // Mount the mgmt directory to the container
-        withFileSystemBind(
-                mgmtDirectory.toString(),
+        withCopyFileToContainer(
+                MountableFile.forHostPath(mgmtDirectory.toString()),
                 "/opt/ekuiper/etc/mgmt"
         );
+        
+        // Add environment variables for MQTT broker connection
+        withEnv("MQTT_HOST", "mqtt-broker");
+        withEnv("MQTT_PORT", "1883");
     }
     
     /**
@@ -57,7 +62,7 @@ public class EKuiperContainer extends GenericContainer<EKuiperContainer> {
      * @return The host address
      */
     public String getEkuiperHost() {
-        return getContainerIpAddress();
+        return getHost();
     }
     
     /**

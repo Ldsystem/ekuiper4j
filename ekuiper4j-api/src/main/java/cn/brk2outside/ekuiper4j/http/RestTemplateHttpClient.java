@@ -200,7 +200,10 @@ public class RestTemplateHttpClient implements HttpClient {
             // Prepare and execute the request
             URI uri = buildUri(combinePath(baseUrl, path), queryParams, pathVariables);
             HttpEntity<?> entity = new HttpEntity<>(requestBody, getHeaders());
+//            System.out.println(method);
+//            System.out.println(uri);
             ResponseEntity<T> response = restTemplate.exchange(uri, method, entity, responseType);
+//            System.out.println(response);
 
             // Handle error responses with bodies that could be eKuiper errors
             if (response.getStatusCode().isError()) {

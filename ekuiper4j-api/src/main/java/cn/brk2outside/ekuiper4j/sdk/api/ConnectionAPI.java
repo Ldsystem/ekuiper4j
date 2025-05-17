@@ -3,9 +3,11 @@ package cn.brk2outside.ekuiper4j.sdk.api;
 import cn.brk2outside.ekuiper4j.dto.request.CreateConnectionRequest;
 import cn.brk2outside.ekuiper4j.dto.request.MqttSourceConfigRequest;
 import cn.brk2outside.ekuiper4j.http.HttpClient;
+import cn.brk2outside.ekuiper4j.http.HttpClientException;
 import cn.brk2outside.ekuiper4j.sdk.endpoint.StandardEndpoints;
 import cn.brk2outside.ekuiper4j.sdk.util.ApiRequestExecutor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,7 @@ public class ConnectionAPI {
      * @param request the update request
      * @return response map
      */
-    public Map<String, Object> updateConnection(String connectionName, CreateConnectionRequest request) {
+    public String updateConnection(String connectionName, CreateConnectionRequest<?> request) {
         return ApiRequestExecutor.executeBody(client, StandardEndpoints.UPDATE_CONNECTION.getEndpoint(), request, connectionName);
     }
 
@@ -74,7 +76,9 @@ public class ConnectionAPI {
      * @param config the sink connection configuration
      * @return check result
      */
-    public String checkSinkConnection(String type, Map<String, Object> config) {
+    public String checkSinkConnection(Map<String, Object> config) {
+        Object type = config.get("type");
+        Assert.notNull(type, "[checkSinkConnection] config.type is required");
         return ApiRequestExecutor.executeBody(client, StandardEndpoints.SINK_CONNECTION_CHECK.getEndpoint(), config, type);
     }
 
@@ -85,7 +89,9 @@ public class ConnectionAPI {
      * @return check result
      */
     public String checkSourceConnection(Map<String, Object> config) {
-        return ApiRequestExecutor.executeBody(client, StandardEndpoints.SOURCE_CONNECTION_CHECK.getEndpoint(), config);
+        Object type = config.get("type");
+        Assert.notNull(type, "[checkSinkConnection] config.type is required");
+        return ApiRequestExecutor.executeBody(client, StandardEndpoints.SOURCE_CONNECTION_CHECK.getEndpoint(), config, type);
     }
 
     /**
@@ -94,7 +100,7 @@ public class ConnectionAPI {
      * @param request the MQTT source configuration request
      * @return check result
      */
-    public String checkMqttSourceConnection(MqttSourceConfigRequest request) {
-        return ApiRequestExecutor.executeBody(client, StandardEndpoints.MQTT_SOURCE_CONNECTION_CHECK.getEndpoint(), request);
+    public void checkMqttSourceConnection(MqttSourceConfigRequest request) throws HttpClientException {
+        ApiRequestExecutor.executeBody(client, StandardEndpoints.MQTT_SOURCE_CONNECTION_CHECK.getEndpoint(), request);
     }
 } 

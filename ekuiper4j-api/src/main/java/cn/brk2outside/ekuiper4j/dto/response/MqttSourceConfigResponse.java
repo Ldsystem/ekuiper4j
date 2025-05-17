@@ -40,7 +40,7 @@ public class MqttSourceConfigResponse {
      * 
      * @example "********"
      */
-    private String password;
+    private final String password = "********";
 
     /**
      * MQTT protocol version. 3.1 (also refer as MQTT 3) or 3.1.1 (also refer as MQTT 4).

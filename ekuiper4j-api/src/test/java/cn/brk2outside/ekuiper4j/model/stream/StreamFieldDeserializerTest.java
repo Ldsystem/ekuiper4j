@@ -103,7 +103,7 @@ public class StreamFieldDeserializerTest {
     @Test
     void testDeserializeCompleteStreamObject() throws IOException {
         // Test deserializing a complete stream object with mixed field types
-        String json = "{\"Name\":\"test_stream\",\"StreamFields\":[{\"Name\":\"id\",\"FieldType\":\"bigint\"},{\"Name\":\"temperature\",\"FieldType\":\"float\"},{\"Name\":\"arrField\",\"FieldType\":{\"Type\":\"array\",\"ElementType\":\"string\"}},{\"Name\":\"structField\",\"FieldType\":{\"Type\":\"struct\",\"Fields\":[{\"Name\":\"age\",\"FieldType\":\"bigint\"}]}}],\"Options\":{\"DATASOURCE\":\"test/topic\",\"FORMAT\":\"JSON\"}}";
+        String json = "{\"Name\":\"test_stream\",\"StreamFields\":[{\"Name\":\"id\",\"FieldType\":\"bigint\"},{\"Name\":\"temperature\",\"FieldType\":\"float\"},{\"Name\":\"arrField\",\"FieldType\":{\"Type\":\"array\",\"ElementType\":\"string\"}},{\"Name\":\"structField\",\"FieldType\":{\"Type\":\"struct\",\"Fields\":[{\"Name\":\"age\",\"FieldType\":\"bigint\"}]}}],\"Options\":{\"datasource\":\"test/topic\",\"format\":\"JSON\"}}";
         
         Stream stream = objectMapper.readValue(json, Stream.class);
         
