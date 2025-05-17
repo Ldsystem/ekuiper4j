@@ -5,7 +5,7 @@
     <parent>
         <groupId>cn.brk2outside.ekuiper4j</groupId>
         <artifactId>ekuiper4j</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <artifactId>ekuiper4j-api</artifactId>
