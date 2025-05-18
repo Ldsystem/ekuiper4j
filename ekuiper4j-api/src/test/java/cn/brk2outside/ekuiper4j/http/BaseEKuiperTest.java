@@ -1,6 +1,5 @@
 package cn.brk2outside.ekuiper4j.http;
 
-import cn.brk2outside.ekuiper4j.Ekuiper4jApiApplicationTests;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
