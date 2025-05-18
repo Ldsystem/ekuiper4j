@@ -1,6 +1,7 @@
-package cn.brk2outside.ekuiper4j.http;
+package cn.brk2outside.ekuiper4j;
 
 import lombok.Getter;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
@@ -29,26 +30,34 @@ public class EKuiperContainer extends GenericContainer<EKuiperContainer> {
     private final Path mgmtDirectory;
     
     public EKuiperContainer() {
-        this(DEFAULT_IMAGE_NAME);
+        this(DEFAULT_IMAGE_NAME, null);
+    }
+
+    public EKuiperContainer(Path mgmtDirectory) {
+        this(DEFAULT_IMAGE_NAME, mgmtDirectory);
     }
     
-    public EKuiperContainer(DockerImageName imageName) {
+    public EKuiperContainer(DockerImageName imageName, Path mgmtDirectory) {
         super(imageName);
         
         addExposedPort(DEFAULT_PORT);
         waitingFor(Wait.forHttp("/").forPort(DEFAULT_PORT));
         
         // Create a temporary directory for management files
-        try {
-            this.mgmtDirectory = Files.createTempDirectory("ekuiper-mgmt");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create temporary management directory", e);
-        }
+        if (null != mgmtDirectory)
+            this.mgmtDirectory = mgmtDirectory;
+        else
+            try {
+                this.mgmtDirectory = Files.createTempDirectory("ekuiper-mgmt");
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create temporary management directory", e);
+            }
         
         // Mount the mgmt directory to the container
-        withCopyFileToContainer(
-                MountableFile.forHostPath(mgmtDirectory.toString()),
-                "/opt/ekuiper/etc/mgmt"
+        withFileSystemBind(
+                this.mgmtDirectory.toString(),
+                "/kuiper/etc/mgmt",
+                BindMode.READ_WRITE
         );
         
         // Add environment variables for MQTT broker connection
@@ -56,6 +65,11 @@ public class EKuiperContainer extends GenericContainer<EKuiperContainer> {
         withEnv("MQTT_PORT", "1883");
     }
     
+    public EKuiperContainer withBasicAuth() {
+        withEnv("KUIPER__BASIC__AUTHENTICATION", "true");
+        return this;
+    }
+
     /**
      * Get the host where eKuiper is running.
      *

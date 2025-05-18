@@ -37,7 +37,7 @@ ekuiper.client.jwt.ekuiper-mgmt-path=/etc/mgmt
 # ekuiper.client.jwt.enabled=true
 # ekuiper.client.jwt.issuer=my-application.pub
 # ekuiper.client.jwt.audience=eKuiper
-# ekuiper.client.jwt.ekuiper-mgmt-path=/opt/ekuiper/etc/mgmt
+# ekuiper.client.jwt.ekuiper-mgmt-path=/ekuiper/etc/mgmt
 
 # Example with remote server
 # ekuiper.client.host=ekuiper.example.com

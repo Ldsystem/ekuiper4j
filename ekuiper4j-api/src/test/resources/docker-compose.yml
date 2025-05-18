@@ -6,6 +6,6 @@ services:
     container_name: ekuiper
     restart: always
     volumes:
-      - ./etc/mgmt:/opt/ekuiper/etc/mgmt
+      - ./etc/mgmt:/kuiper/etc/mgmt
     ports:
       - "9081:9081/tcp"

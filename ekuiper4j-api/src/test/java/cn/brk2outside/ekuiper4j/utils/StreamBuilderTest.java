@@ -6,6 +6,7 @@ import cn.brk2outside.ekuiper4j.model.stream.StreamField;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class StreamBuilderTest {
         
         List<StreamField> fields = StreamFieldBuilder.createFields(id, name, score);
         
-        Map<String, String> options = new HashMap<>();
+        Map<String, String> options = new LinkedHashMap<>();
         options.put("DATASOURCE", "topic/temperature");
         options.put("FORMAT", "JSON");
         options.put("KEY", "id");

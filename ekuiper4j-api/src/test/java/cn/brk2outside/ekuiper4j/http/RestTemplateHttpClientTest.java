@@ -1,9 +1,9 @@
 package cn.brk2outside.ekuiper4j.http;
 
+import cn.brk2outside.ekuiper4j.BaseEKuiperTest;
 import cn.brk2outside.ekuiper4j.dto.request.CreateConnectionRequest;
 import cn.brk2outside.ekuiper4j.dto.response.MqttSourceConfigResponse;
 import cn.brk2outside.ekuiper4j.model.MqttConnProps;
-import cn.brk2outside.ekuiper4j.model.source.mqtt.MqttSourceConfig;
 import cn.brk2outside.ekuiper4j.sdk.endpoint.StandardEndpoints;
 import cn.brk2outside.ekuiper4j.sdk.util.ApiRequestExecutor;
 import org.junit.jupiter.api.AfterEach;

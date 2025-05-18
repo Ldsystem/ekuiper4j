@@ -1,6 +1,5 @@
 package cn.brk2outside.ekuiper4j.sdk.util;
 
-import cn.brk2outside.ekuiper4j.Ekuiper4jApiApplicationTests;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;

@@ -1,5 +1,6 @@
 package cn.brk2outside.ekuiper4j.http;
 
+import cn.brk2outside.ekuiper4j.BaseEKuiperTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

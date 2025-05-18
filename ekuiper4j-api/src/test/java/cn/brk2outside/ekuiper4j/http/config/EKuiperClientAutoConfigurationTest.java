@@ -2,7 +2,7 @@ package cn.brk2outside.ekuiper4j.http.config;
 
 import cn.brk2outside.ekuiper4j.config.EKuiperClientAutoConfiguration;
 import cn.brk2outside.ekuiper4j.config.EKuiperClientProperties;
-import cn.brk2outside.ekuiper4j.http.BaseEKuiperTest;
+import cn.brk2outside.ekuiper4j.BaseEKuiperTest;
 import cn.brk2outside.ekuiper4j.http.HttpClient;
 import cn.brk2outside.ekuiper4j.http.HttpClientException;
 import cn.brk2outside.ekuiper4j.http.RestTemplateHttpClient;

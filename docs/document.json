@@ -1,0 +1,513 @@
+{
+    "apis": {
+      "OverviewAPI": {
+        "description": "API for eKuiper server information",
+        "methods": [
+          {
+            "name": "getServerInfo",
+            "description": "Get server information",
+            "endpoint": "GET /api/v1/info",
+            "parameters": [],
+            "return": {
+              "type": "KuiperInfo",
+              "description": "Server information including version, uptime, etc."
+            }
+          },
+          {
+            "name": "ping",
+            "description": "Check if server is alive",
+            "endpoint": "GET /api/v1/ping",
+            "parameters": [],
+            "return": {
+              "type": "void",
+              "description": "No return value, throws exception if server is not available"
+            }
+          }
+        ]
+      },
+      "RuleAPI": {
+        "description": "API for managing eKuiper rules",
+        "methods": [
+          {
+            "name": "createRule",
+            "description": "Create a new rule",
+            "endpoint": "POST /api/v1/rules",
+            "parameters": [
+              {
+                "name": "request",
+                "type": "CreateRuleRequest",
+                "description": "Rule creation request containing rule definition"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "listRules",
+            "description": "List all rules",
+            "endpoint": "GET /api/v1/rules",
+            "parameters": [],
+            "return": {
+              "type": "List<RuleListResponse>",
+              "description": "List of all rules"
+            }
+          },
+          {
+            "name": "getRule",
+            "description": "Get details of a specific rule",
+            "endpoint": "GET /api/v1/rules/{ruleName}",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule"
+              }
+            ],
+            "return": {
+              "type": "RuleResponse",
+              "description": "Detailed rule information"
+            }
+          },
+          {
+            "name": "updateRule",
+            "description": "Update an existing rule",
+            "endpoint": "PUT /api/v1/rules/{ruleName}",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule to update"
+              },
+              {
+                "name": "request",
+                "type": "CreateRuleRequest",
+                "description": "Updated rule definition"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "deleteRule",
+            "description": "Delete a rule",
+            "endpoint": "DELETE /api/v1/rules/{ruleName}",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule to delete"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "startRule",
+            "description": "Start a rule",
+            "endpoint": "POST /api/v1/rules/{ruleName}/start",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule to start"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "stopRule",
+            "description": "Stop a rule",
+            "endpoint": "POST /api/v1/rules/{ruleName}/stop",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule to stop"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "restartRule",
+            "description": "Restart a rule",
+            "endpoint": "POST /api/v1/rules/{ruleName}/restart",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule to restart"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "getRuleStatus",
+            "description": "Get status of a specific rule",
+            "endpoint": "GET /api/v1/rules/{ruleName}/status",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule"
+              }
+            ],
+            "return": {
+              "type": "RuleStatusResponse",
+              "description": "Rule status information"
+            }
+          },
+          {
+            "name": "getAllRulesStatus",
+            "description": "Get status of all rules",
+            "endpoint": "GET /api/v1/rules/status",
+            "parameters": [],
+            "return": {
+              "type": "Map<String, RuleStatusResponse>",
+              "description": "Map of rule names to their status"
+            }
+          },
+          {
+            "name": "validateRule",
+            "description": "Validate a rule",
+            "endpoint": "POST /api/v1/rules/validate",
+            "parameters": [
+              {
+                "name": "request",
+                "type": "CreateRuleRequest",
+                "description": "Rule to validate"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Validation result"
+            }
+          },
+          {
+            "name": "explainRule",
+            "description": "Get explanation of a rule",
+            "endpoint": "GET /api/v1/rules/{ruleName}/explain",
+            "parameters": [
+              {
+                "name": "ruleName",
+                "type": "String",
+                "description": "Name of the rule"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Rule explanation"
+            }
+          },
+          {
+            "name": "getRulesCpuUsage",
+            "description": "Get CPU usage of all rules",
+            "endpoint": "GET /api/v1/rules/cpu",
+            "parameters": [],
+            "return": {
+              "type": "String",
+              "description": "CPU usage information"
+            }
+          }
+        ]
+      },
+      "StreamAPI": {
+        "description": "API for managing eKuiper streams",
+        "methods": [
+          {
+            "name": "createStream",
+            "description": "Create a new stream",
+            "endpoint": "POST /api/v1/streams",
+            "parameters": [
+              {
+                "name": "request",
+                "type": "CreateStreamRequest",
+                "description": "Stream creation request"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "listStreams",
+            "description": "List all streams",
+            "endpoint": "GET /api/v1/streams",
+            "parameters": [],
+            "return": {
+              "type": "List<String>",
+              "description": "List of stream names"
+            }
+          },
+          {
+            "name": "getStreamDetails",
+            "description": "Get details of a specific stream",
+            "endpoint": "GET /api/v1/streams/{streamName}",
+            "parameters": [
+              {
+                "name": "streamName",
+                "type": "String",
+                "description": "Name of the stream"
+              }
+            ],
+            "return": {
+              "type": "Stream",
+              "description": "Stream details"
+            }
+          },
+          {
+            "name": "getStreamSchema",
+            "description": "Get schema of a specific stream",
+            "endpoint": "GET /api/v1/streams/{streamName}/schema",
+            "parameters": [
+              {
+                "name": "streamName",
+                "type": "String",
+                "description": "Name of the stream"
+              }
+            ],
+            "return": {
+              "type": "StreamSchemaResponse",
+              "description": "Stream schema information"
+            }
+          },
+          {
+            "name": "updateStream",
+            "description": "Update an existing stream",
+            "endpoint": "PUT /api/v1/streams/{streamName}",
+            "parameters": [
+              {
+                "name": "streamName",
+                "type": "String",
+                "description": "Name of the stream to update"
+              },
+              {
+                "name": "request",
+                "type": "UpdateStreamRequest",
+                "description": "Updated stream definition"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "deleteStream",
+            "description": "Delete a stream",
+            "endpoint": "DELETE /api/v1/streams/{streamName}",
+            "parameters": [
+              {
+                "name": "streamName",
+                "type": "String",
+                "description": "Name of the stream to delete"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          }
+        ]
+      },
+      "ConnectionAPI": {
+        "description": "API for managing eKuiper connections",
+        "methods": [
+          {
+            "name": "createConnection",
+            "description": "Create a new connection",
+            "endpoint": "POST /api/v1/connections",
+            "parameters": [
+              {
+                "name": "request",
+                "type": "CreateConnectionRequest",
+                "description": "Connection creation request"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "updateConnection",
+            "description": "Update an existing connection",
+            "endpoint": "PUT /api/v1/connections/{connectionName}",
+            "parameters": [
+              {
+                "name": "connectionName",
+                "type": "String",
+                "description": "Name of the connection to update"
+              },
+              {
+                "name": "request",
+                "type": "CreateConnectionRequest",
+                "description": "Updated connection definition"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "listConnections",
+            "description": "List all connections",
+            "endpoint": "GET /api/v1/connections",
+            "parameters": [],
+            "return": {
+              "type": "List<Map<String, Object>>",
+              "description": "List of connections"
+            }
+          },
+          {
+            "name": "getConnectionInfo",
+            "description": "Get details of a specific connection",
+            "endpoint": "GET /api/v1/connections/{connectionName}",
+            "parameters": [
+              {
+                "name": "connectionName",
+                "type": "String",
+                "description": "Name of the connection"
+              }
+            ],
+            "return": {
+              "type": "Map<String, Object>",
+              "description": "Connection details"
+            }
+          },
+          {
+            "name": "deleteConnection",
+            "description": "Delete a connection",
+            "endpoint": "DELETE /api/v1/connections/{connectionName}",
+            "parameters": [
+              {
+                "name": "connectionName",
+                "type": "String",
+                "description": "Name of the connection to delete"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Success message"
+            }
+          },
+          {
+            "name": "checkSinkConnection",
+            "description": "Check sink connection",
+            "endpoint": "POST /api/v1/connections/sink/{type}/check",
+            "parameters": [
+              {
+                "name": "config",
+                "type": "Map<String, Object>",
+                "description": "Sink connection configuration"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Check result"
+            }
+          },
+          {
+            "name": "checkSourceConnection",
+            "description": "Check source connection",
+            "endpoint": "POST /api/v1/connections/source/{type}/check",
+            "parameters": [
+              {
+                "name": "config",
+                "type": "Map<String, Object>",
+                "description": "Source connection configuration"
+              }
+            ],
+            "return": {
+              "type": "String",
+              "description": "Check result"
+            }
+          },
+          {
+            "name": "checkMqttSourceConnection",
+            "description": "Check MQTT source connection",
+            "endpoint": "POST /api/v1/connections/mqtt/check",
+            "parameters": [
+              {
+                "name": "request",
+                "type": "MqttSourceConfigRequest",
+                "description": "MQTT source configuration"
+              }
+            ],
+            "return": {
+              "type": "void",
+              "description": "No return value, throws exception if check fails"
+            }
+          }
+        ]
+      },
+      "ConfigKeyAPI": {
+        "description": "API for managing eKuiper configuration keys",
+        "methods": [
+          {
+            "name": "listMqttBrokers",
+            "description": "List all MQTT sources/brokers",
+            "endpoint": "GET /api/v1/config/mqtt",
+            "parameters": [],
+            "return": {
+              "type": "Map<String, MqttSourceConfigResponse>",
+              "description": "Map of MQTT brokers"
+            }
+          },
+          {
+            "name": "deleteMqttBroker",
+            "description": "Delete an MQTT broker configuration",
+            "endpoint": "DELETE /api/v1/config/mqtt/{brokerName}",
+            "parameters": [
+              {
+                "name": "brokerName",
+                "type": "String",
+                "description": "Name of the broker to delete"
+              }
+            ],
+            "return": {
+              "type": "void",
+              "description": "No return value"
+            }
+          },
+          {
+            "name": "createOrUpdateMqttBroker",
+            "description": "Create or update an MQTT broker configuration",
+            "endpoint": "PUT /api/v1/config/mqtt/{brokerName}",
+            "parameters": [
+              {
+                "name": "brokerName",
+                "type": "String",
+                "description": "Name of the broker"
+              },
+              {
+                "name": "request",
+                "type": "MqttSourceConfigRequest",
+                "description": "MQTT broker configuration"
+              }
+            ],
+            "return": {
+              "type": "void",
+              "description": "No return value"
+            }
+          }
+        ]
+      }
+    }
+  }

@@ -202,6 +202,7 @@ public class RestTemplateHttpClient implements HttpClient {
             HttpEntity<?> entity = new HttpEntity<>(requestBody, getHeaders());
 //            System.out.println(method);
 //            System.out.println(uri);
+//            System.out.println(entity.getHeaders());
             ResponseEntity<T> response = restTemplate.exchange(uri, method, entity, responseType);
 //            System.out.println(response);
 
