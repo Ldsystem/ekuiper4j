@@ -1,5 +1,12 @@
 # eKuiper4j
 
+[![Build and Test](https://github.com/Ldsystem/ekuiper4j/actions/workflows/build.yml/badge.svg)](https://github.com/Ldsystem/ekuiper4j/actions/workflows/build.yml)
+[![Code Quality](https://github.com/Ldsystem/ekuiper4j/actions/workflows/code-quality.yml/badge.svg)](https://github.com/Ldsystem/ekuiper4j/actions/workflows/code-quality.yml)
+[![Release](https://github.com/Ldsystem/ekuiper4j/actions/workflows/release.yml/badge.svg)](https://github.com/Ldsystem/ekuiper4j/actions/workflows/release.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/cn.brk2outside.ekuiper4j/ekuiper4j-api)](https://search.maven.org/artifact/cn.brk2outside.ekuiper4j/ekuiper4j-api)
+[![Java Version](https://img.shields.io/badge/java-17-blue.svg)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+[![License](https://img.shields.io/github/license/Ldsystem/ekuiper4j)](https://github.com/Ldsystem/ekuiper4j/blob/main/LICENSE)
+
 A Java client library for interacting with [LF Edge eKuiper](https://github.com/lf-edge/ekuiper), providing a type-safe and easy-to-use API for managing eKuiper resources.
 
 ## Features
